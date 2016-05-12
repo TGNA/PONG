@@ -263,27 +263,22 @@ void * moure_pilota(void * cap){
     rh = rv = rd = ' ';
     if ((f_h != ipil_pf) || (c_h != ipil_pc)){		/* si posicio hipotetica no coincideix amb la pos. actual */
       if (f_h != ipil_pf){		/* provar rebot vertical */
-        // pthread_mutex_lock(&mutex_pantalla);
         waitS(id_sem_pantalla);
     	  rv = win_quincar(f_h,ipil_pc);	/* veure si hi ha algun obstacle */
         signalS(id_sem_pantalla);
-        // pthread_mutex_unlock(&mutex_pantalla);
-  	    if (rv != ' '){			/* si no hi ha res */
+        if (rv != ' '){			/* si no hi ha res */
   	      pil_vf = -pil_vf;		/* canvia velocitat vertical */
   	      f_h = pil_pf+pil_vf;	/* actualitza posicio hipotetica */
   	    }
       }
       if (c_h != ipil_pc){	/* provar rebot horitzontal */
-        // pthread_mutex_lock(&mutex_pantalla);
         waitS(id_sem_pantalla);
         rh = win_quincar(ipil_pf,c_h);	/* veure si hi ha algun obstacle */
         if((rh!='+') && (rh!=' ') && (rh!='0')){
           paleta = ((int)rh)-49;// -48-1
-          fprintf(stderr, "Velocitat %f\n", pil_vc);
           if(pil_vc<0) direccio = 'e';
           else direccio = 'd';
         }
-        // pthread_mutex_unlock(&mutex_pantalla);
         signalS(id_sem_pantalla);
   	    if (rh != ' '){			/* si no hi ha res */
           pil_vc = -pil_vc;		/* canvia velocitat horitzontal */
@@ -291,10 +286,8 @@ void * moure_pilota(void * cap){
   	    }
       }
       if ((f_h != ipil_pf) && (c_h != ipil_pc)){	/* provar rebot diagonal */
-        // pthread_mutex_lock(&mutex_pantalla);
         waitS(id_sem_pantalla);
       	rd = win_quincar(f_h,c_h);
-        // pthread_mutex_unlock(&mutex_pantalla);
         signalS(id_sem_pantalla);
   	    if (rd != ' '){				/* si no hi ha obstacle */
           pil_vf = -pil_vf; pil_vc = -pil_vc;	/* canvia velocitats */
@@ -302,50 +295,42 @@ void * moure_pilota(void * cap){
   	      c_h = pil_pc+pil_vc;		/* actualitza posicio entera */
   	    }
       }
-      // pthread_mutex_lock(&mutex_pantalla);
       waitS(id_sem_pantalla);
       if (win_quincar(f_h,c_h) == ' '){/* verificar posicio definitiva *//* si no hi ha obstacle */
         win_escricar(ipil_pf,ipil_pc,' ',NO_INV);	/* esborra pilota */
-        // pthread_mutex_unlock(&mutex_pantalla);
         signalS(id_sem_pantalla);
       	pil_pf += pil_vf; pil_pc += pil_vc;
       	ipil_pf = f_h; ipil_pc = c_h;		/* actualitza posicio actual */
       	if ((ipil_pc > 0) && (ipil_pc <= n_col)){	/* si no surt */
-          // pthread_mutex_lock(&mutex_pantalla);
           waitS(id_sem_pantalla);
       		win_escricar(ipil_pf,ipil_pc,'.',INVERS); /* imprimeix pilota */
-          // pthread_mutex_unlock(&mutex_pantalla);
           signalS(id_sem_pantalla);
       	}else{
           waitS(id_sem_vglobals);
       		*p_cont = ipil_pc;	/* codi de finalitzacio de partida */
           signalS(id_sem_vglobals);
         }
-          // TODO SEMAFOR?
       }else{
-        signalS(id_sem_pantalla);}
-        // pthread_mutex_unlock(&mutex_pantalla);
+        signalS(id_sem_pantalla);
+      }
     }else{
       pil_pf += pil_vf; pil_pc += pil_vc;
     }
-    // pthread_mutex_lock(&mutex_vglobals);
     waitS(id_sem_vglobals);
     if(*p_n_moviments<=0){
-      // pthread_mutex_unlock(&mutex_vglobals);
       signalS(id_sem_vglobals);
       pthread_exit(0);
     }
-      signalS(id_sem_vglobals);
-      // pthread_mutex_unlock(&mutex_vglobals);
+    signalS(id_sem_vglobals);
 
-      for ( i = 0; i < numPaletes; i++) {
-        if(p_busties[i] == -1) continue;
-        if((i==paleta) && (direccio=='d')) sprintf(mis, "%i", 1);
-        else if((i==paleta) && (direccio=='e')) sprintf(mis, "%i", 2);
-        else sprintf(mis, "%i", 0);
+    for ( i = 0; i < numPaletes; i++) {
+      if(p_busties[i] == -1) continue;
+      if((i==paleta) && (direccio=='d')) sprintf(mis, "%i", 1);
+      else if((i==paleta) && (direccio=='e')) sprintf(mis, "%i", 2);
+      else sprintf(mis, "%i", 0);
 
-        sendM(p_busties[i],mis,4);
-      }
+      sendM(p_busties[i],mis,4);
+    }
   } while ((*p_tecla != TEC_RETURN) && (*p_cont==-1));
   pthread_exit(0);
 }
@@ -353,11 +338,8 @@ void * moure_pilota(void * cap){
 /* funcio per moure la paleta de l'usuari en funcio de la tecla premuda */
 void * mou_paleta_usuari(void * cap){
   do{
-    // win_retard(retard);
-    // pthread_mutex_lock(&mutex_vglobals);
     waitS(id_sem_vglobals);
     *p_tecla = win_gettec();
-    // pthread_mutex_lock(&mutex_pantalla);
     waitS(id_sem_pantalla);
     if ((*p_tecla == TEC_AVALL) && (win_quincar(ipu_pf+l_pal,ipu_pc) == ' ')){
       win_escricar(ipu_pf,ipu_pc,' ',NO_INV);	   /* esborra primer bloc */
@@ -369,20 +351,15 @@ void * mou_paleta_usuari(void * cap){
       ipu_pf--;					    /* actualitza posicio */
       win_escricar(ipu_pf,ipu_pc,'0',INVERS);	    /* imprimeix primer bloc */
     }
-    // pthread_mutex_unlock(&mutex_pantalla);
     signalS(id_sem_pantalla);
     if(*p_n_moviments>0){
       if((*p_tecla == TEC_AMUNT) || (*p_tecla == TEC_AVALL))
         *p_n_moviments=*p_n_moviments-1;
-      // pthread_mutex_unlock(&mutex_vglobals);
-    }else{
+      }else{
       signalS(id_sem_vglobals);
       pthread_exit(0);
     }
     signalS(id_sem_vglobals);
-      // pthread_mutex_unlock(&mutex_vglobals);
-      // pthread_exit(0);
-
   } while ((*p_tecla != TEC_RETURN) && (*p_cont==-1));
   pthread_exit(0);
 }
@@ -414,7 +391,6 @@ int main(int n_args, const char *ll_args[]){
   int busties[numPaletes];
   for (i = 0; i < numPaletes; i++) {
     busties[i] = p_busties[i];
-    fprintf(stderr, "BUSTIA %i %i\n", busties[i], p_busties[i]);
   }
   // pthread_mutex_init(&mutex_vglobals, NULL);		/* inicialitza el semafor */
   // pthread_mutex_init(&mutex_pantalla, NULL);    /* inicialitza el semafor */
@@ -458,15 +434,11 @@ int main(int n_args, const char *ll_args[]){
     seg=difftime(final,inici);
     min=seg/60;
     seg=seg%60;
-    // pthread_mutex_lock(&mutex_vglobals);
     waitS(id_sem_vglobals);
     sprintf(buffer,"Fets: %d Restants: %d Temps: %2d:%2d", (numMovimentsMax-*p_n_moviments),*p_n_moviments, min, seg);
-    // pthread_mutex_unlock(&mutex_vglobals);
     signalS(id_sem_vglobals);
-    // pthread_mutex_lock(&mutex_pantalla);
     waitS(id_sem_pantalla);
     win_escristr(buffer);
-    // pthread_mutex_unlock(&mutex_pantalla);
     signalS(id_sem_pantalla);
     win_update();
     win_retard(retard);
@@ -475,12 +447,10 @@ int main(int n_args, const char *ll_args[]){
   for(i=0; i<(MAX_THREAD); i++){
     pthread_join(tid[i], NULL);
   }
-  // pthread_mutex_destroy(&mutex_pantalla);
-  // pthread_mutex_destroy(&mutex_vglobals);
 
-   for (i = 0; i < n; i++){
-	    waitpid(tpid[i],NULL,0);	/* espera finalitzacio d'un fill */
-	 }
+  for (i = 0; i < n; i++){
+    waitpid(tpid[i],NULL,0);	/* espera finalitzacio d'un fill */
+	}
 
   win_fi();
 
@@ -492,8 +462,7 @@ int main(int n_args, const char *ll_args[]){
   }
 
   for (i = 0; i < numPaletes; i++) {
-     fprintf(stderr, "BORRA BUSTIA %i: %i - %i\n", i, busties[i], p_busties[i]);
-     elim_mis(busties[i]);
+    elim_mis(busties[i]);
   }
 
   elim_mem(id_win);

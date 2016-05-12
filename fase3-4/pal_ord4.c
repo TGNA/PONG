@@ -75,7 +75,6 @@ int main(int n_args, char *ll_args[]){
     else if(atoi(mis) == 1) desplacament = 1;
     else if(atoi(mis) == 2) desplacament = -1;
 
-    // if (atoi(mis)!=0)fprintf(stderr,"Paleta %c: %s\n", ll_args[12][0] , mis);
     if(desplacament != 0){
       waitS(id_sem_pantalla);
       moure=true;
@@ -94,7 +93,6 @@ int main(int n_args, char *ll_args[]){
       }
       if(moure){
         if(paleta.ipo_pc+desplacament == (n_col-1)){
-          fprintf(stderr, "BORRAR\n");
           for(i=1; i<=l_pal; i++)
             win_escricar(paleta.ipo_pf+l_pal-i,paleta.ipo_pc,' ',NO_INV);
           p_busties[index] = -1;
