@@ -449,8 +449,7 @@ int main(int n_args, const char *ll_args[]){
   }
 
   for (i = 0; i < n; i++){
-    // waitpid(tpid[i],NULL,0);	/* espera finalitzacio d'un fill */
-    kill(tpid[i], SIGKILL);
+    waitpid(tpid[i],NULL,0);	/* espera finalitzacio d'un fill */
 	}
 
   win_fi();

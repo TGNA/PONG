@@ -149,6 +149,6 @@ int main(int n_args, char *ll_args[]){
     }
     signalS(id_sem_vglobals);
   } while ((*p_tecla != TEC_RETURN) && (*p_cont==-1) && (*p_n_moviments>0));
-
+  p_busties[index] = -1;
   return 0;
 }
