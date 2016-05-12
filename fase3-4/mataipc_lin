@@ -1,0 +1,4 @@
+login=`echo $LOGNAME | cut -c 1-8`
+	ipcrm `ipcs -m | grep $login | awk '{print "-m" $2}'`
+	ipcrm `ipcs -q | grep $login | awk '{print "-q" $2}'`
+	ipcrm `ipcs -s | grep $login | awk '{print "-s" $2}'`
