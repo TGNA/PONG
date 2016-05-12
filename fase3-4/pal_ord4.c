@@ -67,7 +67,6 @@ int main(int n_args, char *ll_args[]){
   int cua_paletes[l_pal];
 
   do{
-    fprintf(stderr, "SOC EL PROCES %i\n", index);
     win_retard(retard);
     if (p_busties[index] == -1)continue;
     receiveM(p_busties[index],mis);
