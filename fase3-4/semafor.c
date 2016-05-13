@@ -25,18 +25,18 @@
 /**********************************************************************/
 int ini_sem(int valor)
 {
-union semu a;
+union semun a;
 int r,id_sem;
 
- id_sem = semget(IPC_PRIVATE,1,0600);	/* reserva d'un conjunt de semafors
-				del sistema, de forma privada, per al proces
-				actual i als seus fills. Nomes reservem un.
-				Nomes el propietari podra utilitzar-lo */
+ id_sem = semget(IPC_PRIVATE,1,0600); /* reserva d'un conjunt de semafors
+        del sistema, de forma privada, per al proces
+        actual i als seus fills. Nomes reservem un.
+        Nomes el propietari podra utilitzar-lo */
  assert ( id_sem != -1);
 
  a.val = valor;
  r = semctl(id_sem,0,SETVAL,a);        /* asignacio del valor original al
-					semafor reservat (el numero 0) */
+          semafor reservat (el numero 0) */
  assert (r == 0);
  return(id_sem);
 }
@@ -56,7 +56,7 @@ void elim_sem(int id_sem)
 union semun a={0};
 int r;
 
- r = semctl(id_sem,0,IPC_RMID,a); 	/* esborrem el semafor */
+ r = semctl(id_sem,0,IPC_RMID,a);   /* esborrem el semafor */
  assert (r == 0);
 }
 
@@ -75,12 +75,12 @@ void waitS (int id_sem)
 struct sembuf a[1];
 int r;
 
- a->sem_num = 0;	/* semafor sobre el que volem aplicar l'operacio 
-			(l'unic) */
- a->sem_op = -1;	/* Wait, demanem un recurs */
+ a->sem_num = 0;  /* semafor sobre el que volem aplicar l'operacio 
+      (l'unic) */
+ a->sem_op = -1;  /* Wait, demanem un recurs */
  a->sem_flg = 0;
- r = semop(id_sem,a,1);	/* aplicar una operacio sobre el cj de semafors 
-			reservats.*/
+ r = semop(id_sem,a,1); /* aplicar una operacio sobre el cj de semafors 
+      reservats.*/
  assert (r != -1);
 }
 
@@ -99,11 +99,11 @@ void signalS (int id_sem)
 struct sembuf a[1];
 int r;
 
- a->sem_num = 0;	/* semafor sobre el que volem aplicar l'operacio 
-			(l'unic) */
- a->sem_op = 1;		/* Signal, alliberem un recurs */
+ a->sem_num = 0;  /* semafor sobre el que volem aplicar l'operacio 
+      (l'unic) */
+ a->sem_op = 1;   /* Signal, alliberem un recurs */
  a->sem_flg = 0;
- r = semop(id_sem,a,1);	/* aplicar una operacio sobre el cj de semafors 
-			reservats.*/
+ r = semop(id_sem,a,1); /* aplicar una operacio sobre el cj de semafors 
+      reservats.*/
  assert (r != -1);
 }
