@@ -25,7 +25,7 @@
 /**********************************************************************/
 int ini_sem(int valor)
 {
-union semun a;
+union semu a;
 int r,id_sem;
 
  id_sem = semget(IPC_PRIVATE,1,0600); /* reserva d'un conjunt de semafors
@@ -53,7 +53,7 @@ int r,id_sem;
 /**********************************************************************/
 void elim_sem(int id_sem)
 {
-union semun a={0};
+union semu a={0};
 int r;
 
  r = semctl(id_sem,0,IPC_RMID,a);   /* esborrem el semafor */
