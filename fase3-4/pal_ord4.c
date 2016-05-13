@@ -115,7 +115,7 @@ int main(int n_args, char *ll_args[]){
       }
       signalS(id_sem_pantalla);
     }
-
+    if (p_busties[index] == -1)continue;
 
     f_h = paleta.po_pf + paleta.v_pal;    /* posicio hipotetica de la paleta */
     if (f_h != paleta.ipo_pf){ /* si pos. hipotetica no coincideix amb pos. actual */
