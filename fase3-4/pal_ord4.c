@@ -67,8 +67,8 @@ int main(int n_args, char *ll_args[]){
   int cua_paletes[l_pal];
 
   do{
-    if (p_busties[index] == -1)exit(0);
     win_retard(retard);
+    if (p_busties[index] == -1)continue;
     receiveM(p_busties[index],mis);
 
     if(atoi(mis) == 0) desplacament = 0;
@@ -115,7 +115,7 @@ int main(int n_args, char *ll_args[]){
       }
       signalS(id_sem_pantalla);
     }
-    if (p_busties[index] == -1) continue;
+    if (p_busties[index] == -1)continue;
 
     f_h = paleta.po_pf + paleta.v_pal;    /* posicio hipotetica de la paleta */
     if (f_h != paleta.ipo_pf){ /* si pos. hipotetica no coincideix amb pos. actual */
@@ -148,7 +148,7 @@ int main(int n_args, char *ll_args[]){
       *p_n_moviments=*p_n_moviments-1;
     }
     signalS(id_sem_vglobals);
-  } while ((*p_tecla != TEC_RETURN) && (*p_cont==-1) && (*p_n_moviments>0) && (p_busties[index] != -1));
+  } while ((*p_tecla != TEC_RETURN) && (*p_cont==-1) && (*p_n_moviments>0));
   
   return 0;
 }
