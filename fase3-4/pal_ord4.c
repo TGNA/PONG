@@ -114,7 +114,7 @@ int main(int n_args, char *ll_args[]){
       }
       signalS(id_sem_pantalla);
     }
-    if (p_busties[index] == -1)exit(0);
+    if (p_busties[index] == -1) continue;
 
     f_h = paleta.po_pf + paleta.v_pal;    /* posicio hipotetica de la paleta */
     if (f_h != paleta.ipo_pf){ /* si pos. hipotetica no coincideix amb pos. actual */
@@ -147,7 +147,7 @@ int main(int n_args, char *ll_args[]){
       *p_n_moviments=*p_n_moviments-1;
     }
     signalS(id_sem_vglobals);
-  } while ((*p_tecla != TEC_RETURN) && (*p_cont==-1) && (*p_n_moviments>0));
+  } while ((*p_tecla != TEC_RETURN) && (*p_cont==-1) && (*p_n_moviments>0) && (p_busties[index] != -1));
   
   return 0;
 }
