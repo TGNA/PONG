@@ -67,6 +67,7 @@ int main(int n_args, char *ll_args[]){
   int cua_paletes[l_pal];
 
   do{
+    if (p_busties[index] == -1)exit(0);
     win_retard(retard);
     receiveM(p_busties[index],mis);
 
